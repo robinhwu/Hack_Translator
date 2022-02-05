@@ -3,4 +3,4 @@ project(Hack_Translator)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(Hack_Translator main.cpp)
+add_executable(Hack_Translator main.cpp Parser.cpp Parser.h CodeWriter.cpp CodeWriter.h)
