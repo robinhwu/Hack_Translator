@@ -5,7 +5,6 @@
 #include "CodeWriter.h"
 #include <string>
 #include <iostream>
-#include "Parser.h"
 
 using namespace std;
 
@@ -172,7 +171,10 @@ void CodeWriter::writePush(string arg1, int arg2) {
         fout << "@SP" << endl << "A=M" << endl << "M=D" << endl;
         incSP();
     } else {
-
+        arg2 += 16;
+        fout << "@" << to_string(arg2) << endl << "D=M" << endl;
+        fout << "@SP" << endl << "A=M" << endl << "M=D" << endl;
+        incSP();
     }
 }
 
@@ -206,7 +208,10 @@ void CodeWriter::writePop(string arg1, int arg2) {
         decSP();
         fout << "@" << to_string(arg2) << endl << "M=D" << endl;
     } else {
-
+        arg2 += 16;
+        decSP();
+        fout << "@SP" << endl << "A=M" << endl << "D=M" << endl;
+        fout << "@" << to_string(arg2) << endl << "M=D" << endl;
     }
 }
 
