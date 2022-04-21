@@ -39,10 +39,10 @@ VMCommand Parser::commandType() {
             return C_POP;
         } else if (command.find("label") != string::npos) {
             return C_LABEL;
-        } else if (command.find("goto") != string::npos) {
-            return C_GOTO;
         } else if (command.find("if") != string::npos) {
             return C_IF;
+        } else if (command.find("goto") != string::npos) {
+            return C_GOTO;
         } else if (command.find("function") != string::npos) {
             return C_FUNCTION;
         } else if (command.find("return") != string::npos) {
@@ -66,8 +66,15 @@ string Parser::arg1() {
     return arg;
 }
 
-int Parser::arg2() {
-    int lastIndex = command.find_last_of(' ', string::npos);
-    string arg = command.substr(lastIndex+1);
+int Parser::arg2() const {
+    int secondIndex = 0, slashIndex = 0;
+    for (int i = 0; i < 2; ++i){
+        secondIndex = (command.find(' ', secondIndex)) + 1;
+    }
+    string arg = command.substr(secondIndex);
+    if (command.find("//") != string::npos) {
+        slashIndex = arg.find("//", slashIndex);
+        arg = arg.substr(0, slashIndex);
+    }
     return stoi(arg);
 }

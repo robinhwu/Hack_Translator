@@ -11,12 +11,12 @@
 using namespace std;
 
 // VM commands
-enum VMCommand { C_ARITHMETIC, C_PUSH, C_POP, C_LABEL, C_GOTO, C_IF, C_FUNCTION, C_RETURN, C_CALL, C_NULL };
+enum VMCommand { C_ARITHMETIC, C_PUSH, C_POP, C_LABEL, C_IF, C_GOTO, C_FUNCTION, C_RETURN, C_CALL, C_NULL };
 
 class Parser {
 public:
 
-    Parser(string filename);
+    explicit Parser(string filename);
 
     ~Parser();
 
@@ -28,7 +28,7 @@ public:
 
     string arg1();
 
-    int arg2();
+    int arg2() const;
 
     ifstream fin;
 
