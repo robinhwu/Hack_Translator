@@ -209,8 +209,14 @@ void CodeWriter::writePush(const string& arg1, int arg2) {
         arg2 += 5;
         sampleSix(arg2);
     } else {
-        arg2 += 16;
-        sampleSix(arg2);
+        string name;
+        if (functionName.find(".") != string::npos) {
+            name = functionName.substr(0,functionName.find("."));
+        }
+        fout << "@" << name << "." << arg2 << endl;
+        fout << "D=M" << endl;
+        sampleTwo();
+        incSP();
     }
 }
 
@@ -265,8 +271,11 @@ void CodeWriter::writePop(const string& arg1, int arg2) {
     } else {
         decSP();
         sampleZero();
-        arg2 += 16;
-        fout << "@" << arg2 << endl;
+        string name;
+        if (functionName.find(".") != string::npos) {
+            name = functionName.substr(0,functionName.find("."));
+        }
+        fout << "@" << name << "." << arg2 << endl;
         fout << "M=D" << endl;
     }
 }
