@@ -70,6 +70,8 @@ public:
     int symbolCount;
 
     int labelCount;
+
+    string functionName;
 };
 
 

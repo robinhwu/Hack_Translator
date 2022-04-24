@@ -17,7 +17,12 @@ CodeWriter::~CodeWriter() {
 }
 
 void CodeWriter::writeInit() {
-
+    // bootstrap
+    fout << "@256" << endl;
+    fout << "D=A" << endl;
+    fout << "@SP" << endl;
+    fout << "M=D" << endl;
+    writeCall("Sys.init", 0);
 }
 
 void CodeWriter::setFileName(string filename) {
@@ -79,21 +84,21 @@ void CodeWriter::sampleFour() {
 }
 
 void CodeWriter::writeArithmetic(const string& command) {
-    if (command == "add")
+    if (command.substr(0,3) == "add")
     {
         sampleOne();
         fout << "D=D+A" << endl;
         sampleTwo();
         incSP();
     }
-    else if (command == "sub")
+    else if (command.substr(0,3) == "sub")
     {
         sampleOne();
         fout << "D=A-D" << endl;
         sampleTwo();
         incSP();
     }
-    else if (command == "neg")
+    else if (command.substr(0,3) == "neg")
     {
         decSP();
         fout << "A=M" << endl;
@@ -111,33 +116,33 @@ void CodeWriter::writeArithmetic(const string& command) {
         sampleTwo();
         incSP();
     }
-    else if (command == "and")
+    else if (command.substr(0,3) == "and")
     {
         sampleOne();
         fout << "D=D&A" << endl;
         sampleTwo();
         incSP();
     }
-    else if (command == "or")
+    else if (command.substr(0,2) == "or")
     {
         sampleOne();
         fout << "D=D|A" << endl;
         sampleTwo();
         incSP();
     }
-    else if (command == "eq")
+    else if (command.substr(0,2) == "eq")
     {
         sampleThree();
         fout << "D;JEQ" << endl;
         sampleFour();
     }
-    else if (command == "gt")
+    else if (command.substr(0,2) == "gt")
     {
         sampleThree();
         fout << "D;JGT" << endl;
         sampleFour();
     }
-    else if (command == "lt")
+    else if (command.substr(0,2) == "lt")
     {
         sampleThree();
         fout << "D;JLT" << endl;
@@ -267,11 +272,12 @@ void CodeWriter::writePop(const string& arg1, int arg2) {
 }
 
 void CodeWriter::writeLabel(const string& arg1) {
-    fout << "(" << arg1 << ")"<< endl;
+    fout << "(" << functionName << "$" << arg1 << ")"<< endl;
 }
 
-void CodeWriter::writeFunction(string functionName, int numArgs) {
-    fout << "(" << functionName << ")" << endl;
+void CodeWriter::writeFunction(string name, int numArgs) {
+    functionName = name;
+    fout << "(" << name << ")" << endl;
     for (int i = 0; i < numArgs; i++) {
         fout << "@0" << endl;
         fout << "D=A" << endl;
@@ -280,7 +286,7 @@ void CodeWriter::writeFunction(string functionName, int numArgs) {
     }
 }
 
-void CodeWriter::writeCall(string functionName, int numArgs) {
+void CodeWriter::writeCall(string name, int numArgs) {
     // PUSH RETURN ADDRESS
     fout << "@LABEL" << labelCount << endl;
     fout << "D=A" << endl;
@@ -320,7 +326,7 @@ void CodeWriter::writeCall(string functionName, int numArgs) {
     fout << "@LCL" << endl;
     fout << "M=D" << endl;
     // GOTO F
-    fout << "@" << functionName << endl;
+    fout << "@" << name << endl;
     fout << "0;JMP" << endl;
     // (RETURN ADDRESS)
     fout << "(LABEL" << labelCount << ")" << endl;
@@ -397,12 +403,12 @@ void CodeWriter::writeReturn() {
 void CodeWriter::writeIf(const string& arg1) {
     decSP();
     fout << "@SP" << endl << "A=M" << endl << "D=M" << endl;
-    fout << "@" << arg1 <<  endl;
+    fout << "@" << functionName << "$" << arg1 <<  endl;
     fout << "D;JNE" << endl;
 }
 
 void CodeWriter::writeGoto(const string& arg1) {
-    fout << "@" << arg1 <<  endl;
+    fout << "@" << functionName << "$" << arg1 <<  endl;
     fout << "0;JMP" << endl;
 }
 

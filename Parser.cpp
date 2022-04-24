@@ -33,21 +33,21 @@ VMCommand Parser::commandType() {
     if(command.empty() || command[0] =='/') {
         return C_NULL;
     } else {
-        if (command.find("push") != string::npos) {
+        if (command.substr(0, 4) == "push") {
             return C_PUSH;
-        } else if (command.find("pop") != string::npos) {
+        } else if (command.substr(0, 3) == "pop") {
             return C_POP;
-        } else if (command.find("label") != string::npos) {
+        } else if (command.substr(0, 5) == "label") {
             return C_LABEL;
-        } else if (command.find("if") != string::npos) {
+        } else if (command.substr(0, 2) == "if") {
             return C_IF;
-        } else if (command.find("goto") != string::npos) {
+        } else if (command.substr(0, 4) == "goto") {
             return C_GOTO;
-        } else if (command.find("function") != string::npos) {
+        } else if (command.substr(0, 8) == "function") {
             return C_FUNCTION;
-        } else if (command.find("return") != string::npos) {
+        } else if (command.substr(0, 6) == "return") {
             return C_RETURN;
-        } else if (command.find("call") != string::npos) {
+        } else if (command.substr(0, 4) == "call") {
             return C_CALL;
         } else {
             return C_ARITHMETIC;
